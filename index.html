@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Pathways: Bachelor to Master's</title>
+    <style>
+        :root {
+            --bg-color: #fafbfc;
+            --text-main: #2c3e50;
+            --shared-color: #3498db;
+            --shared-bg: #f0f7fc;
+            --decision-color: #e67e22;
+            --decision-bg: #fdf6ec;
+            --normal-color: #2ecc71;
+            --normal-bg: #f0fbf5;
+            --cqu-color: #9b59b6;
+            --cqu-bg: #f8f3fc;
+            --line-color: #dcdfe6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        p.subtitle {
+            font-size: 1.1em;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .tree {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Node Base Style */
+        .node {
+            background: white;
+            border: 2px solid var(--theme-color, var(--line-color));
+            border-radius: 8px;
+            padding: 18px;
+            margin: 0;
+            width: 360px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.04);
+            position: relative;
+            z-index: 2;
+            transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
+            box-sizing: border-box;
+        }
+        
+        /* Node Expanded State */
+        .node.expanded {
+            width: 550px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            z-index: 10;
+        }
+
+        .node:hover {
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+        }
+
+        .node-title {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        .node-desc {
+            font-size: 0.95em;
+            opacity: 0.85;
+            margin-bottom: 10px;
+        }
+
+        /* Specific Node Color Variables */
+        .node.shared {
+            --theme-color: #3498db;
+            --theme-bg: #f0f7fc;
+            --theme-header-bg: #dbeeff;
+            border-color: var(--theme-color);
+            color: #2980b9;
+            background: var(--theme-bg);
+        }
+
+        .node.decision {
+            --theme-color: var(--decision-color);
+            --theme-bg: var(--decision-bg);
+            border-color: var(--theme-color);
+            color: #d35400;
+            background: var(--theme-bg);
+            border-radius: 30px;
+            padding: 15px 30px;
+            width: auto;
+            font-weight: bold;
+        }
+
+        .branches {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            gap: 20px;
+        }
+
+        .branch {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 50%;
+        }
+
+        .branch-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin: 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--line-color);
+            width: 80%;
+        }
+
+        .normal-path .branch-title { color: #27ae60; border-color: #27ae60; }
+        .cqu-path .branch-title { color: #8e44ad; border-color: #8e44ad; }
+
+        .node.normal {
+            --theme-color: #2ecc71;
+            --theme-bg: #f0fbf5;
+            --theme-header-bg: #e1f7eb;
+            border-color: var(--theme-color);
+        }
+        .node.normal .node-title { color: #27ae60; }
+        
+        .node.cqu {
+            --theme-color: #9b59b6;
+            --theme-bg: #f8f3fc;
+            --theme-header-bg: #f0e3f7;
+            border-color: var(--theme-color);
+        }
+        .node.cqu .node-title { color: #8e44ad; }
+
+        .node.cqu-highlight {
+            --theme-color: #9b59b6;
+            --theme-bg: #f8f3fc;
+            --theme-header-bg: #f0e3f7;
+            background: var(--theme-bg);
+            border-color: var(--theme-color);
+        }
+        .node.cqu-highlight .node-title { color: #8e44ad; }
+
+        .node.award {
+            background: #34495e;
+            color: white;
+            border-color: #34495e;
+            margin-top: 20px;
+            width: 360px !important;
+        }
+        
+        .node.award-cqu {
+            background: #9b59b6;
+            color: white;
+            border-color: #9b59b6;
+            margin-top: 20px;
+            width: 360px !important;
+        }
+
+        /* Specialisation Selector Control */
+        .spec-selector-container {
+            background: #f0e3f7;
+            border: 2px solid #9b59b6;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin: 10px 0 20px 0;
+            width: 360px;
+            box-sizing: border-box;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.04);
+        }
+
+        .spec-label {
+            font-size: 0.9em;
+            font-weight: bold;
+            color: #8e44ad;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .spec-buttons {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+        }
+
+        .spec-btn {
+            background: white;
+            border: 1.5px solid #9b59b6;
+            color: #8e44ad;
+            border-radius: 16px;
+            padding: 6px 10px;
+            font-size: 0.8em;
+            font-weight: bold;
+            cursor: pointer;
+            flex: 1;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .spec-btn:hover {
+            background: #f0e3f7;
+        }
+
+        .spec-btn.active {
+            background: #9b59b6;
+            color: white;
+            border-color: #9b59b6;
+            box-shadow: 0 2px 6px rgba(142, 68, 173, 0.3);
+        }
+
+        /* Toggle Button - Light & Clean Pill Style */
+        .toggle-btn {
+            background: white;
+            border: 1.5px solid var(--theme-color, currentColor);
+            color: var(--theme-color, inherit);
+            border-radius: 20px;
+            padding: 6px 16px;
+            font-size: 0.85em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 5px;
+            outline: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+        }
+
+        .toggle-btn:hover {
+            background: var(--theme-color);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Slide Content Container */
+        .course-panel {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            text-align: left;
+            margin-top: 0;
+            border-top: 0px solid transparent;
+        }
+
+        .course-panel.open {
+            max-height: 1200px;
+            transition: max-height 0.6s ease-in-out;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px dashed var(--theme-color, var(--line-color));
+        }
+
+        .course-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85em;
+            color: #2c3e50;
+        }
+
+        /* Soft & Light Headers */
+        .course-table th {
+            background: var(--theme-header-bg, #f4f6f9);
+            color: var(--text-main);
+            text-align: left;
+            padding: 8px 8px;
+            border-bottom: 2px solid var(--theme-color, var(--line-color));
+            font-weight: 600;
+        }
+
+        .course-table td {
+            padding: 7px 8px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .course-table th:nth-child(4), .course-table td:nth-child(4),
+        .course-table th:nth-child(5), .course-table td:nth-child(5) {
+            text-align: center;
+        }
+
+        /* Soft Total Credit Badge */
+        .total-credits {
+            margin-top: 15px;
+            font-size: 0.88em;
+            font-weight: 600;
+            text-align: right;
+            color: var(--text-main);
+            background: var(--theme-header-bg, #f4f6f9);
+            border: 1px solid var(--theme-color);
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+
+        /* Connectors */
+        .connector {
+            width: 2px;
+            height: 30px;
+            background: var(--line-color);
+            margin: 0 auto;
+        }
+
+        .horizontal-line {
+            display: flex;
+            width: 50%;
+            justify-content: space-between;
+            border-top: 2px solid var(--line-color);
+            margin: 0 auto;
+            height: 20px;
+        }
+
+        .drop-line {
+            width: 2px;
+            height: 100%;
+            background: var(--line-color);
+        }
+
+        @media (max-width: 1200px) {
+            .node.expanded { width: 480px; }
+        }
+
+        @media (max-width: 900px) {
+            .node.expanded { width: 95%; }
+            .spec-selector-container { width: 95%; }
+            .horizontal-line { display: none; }
+            .branches { flex-direction: column; align-items: center; }
+            .branch { width: 100%; margin-bottom: 40px; }
+            .node { width: 95%; }
+        }
+
+        .node.timing-highlight {
+            --theme-color: #f39c12;
+            background: #fff8e1;
+            border: 2px solid #f39c12;
+            color: #7e5109;
+            box-shadow: 0 4px 10px rgba(243, 156, 18, 0.15);
+        }
+
+        .node.timing-highlight .node-title {
+            color: #d35400;
+        }
+
+        .node.timing-highlight li:not(:last-child) {
+            margin-bottom: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>BCM Progression Pathways</h1>
+        <p class="subtitle">Explore the <strong>TWO (2)</strong> academic routes: complete a standard 4-year Bachelor's degree,<br><strong>OR</strong> choose the accelerated 3+2 track to earn <strong>BOTH</strong> a Bachelor's (UMPSA) and a Master's degree with <a target="_blank" href="https://www.cqu.edu.au">CQU Australia</a>.</p>
+
+        <div class="tree">
+            <!-- Year 1 -->
+            <div class="node shared">
+                <div class="node-title">Year 1</div>
+                <div class="node-desc">Shared Foundation & Common Core</div>
+                <button class="toggle-btn" onclick="toggleCourses(this)">▼ View Required Courses</button>
+                
+                <div class="course-panel">
+                    <table class="course-table">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Course Name</th>
+                                <th>Type</th>
+                                <th>Sem</th>
+                                <th>Cr</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Sem 1 -->
+                            <tr><td>UHC1032</td><td>KURSUS INTEGRITI DAN ANTI-RASUAH (KIAR)</td><td>University</td><td>1</td><td>2</td></tr>
+                            <tr><td>UQA2002</td><td>KO-KURIKULUM</td><td>University</td><td>1</td><td>2</td></tr>
+                            <tr><td>UHC1112</td><td>FALSAFAH DAN CABARAN SEMASA</td><td>University</td><td>1</td><td>2</td></tr>
+                            <tr><td>ULE1310</td><td>FUNDAMENTAL OF ENGLISH LANGUAGE</td><td>University</td><td>1</td><td>0</td></tr>
+                            <tr><td>BUM1153</td><td>INTERMEDIATE MATHEMATICS</td><td>Math</td><td>1</td><td>3</td></tr>
+                            <tr><td>BCI1033</td><td>PROGRAMMING TECHNIQUES</td><td>Core</td><td>1</td><td>3</td></tr>
+                            <tr><td>BCN1073</td><td>COMPUTER ARCHITECTURE & ORGANIZATION</td><td>Core</td><td>1</td><td>3</td></tr>
+                            <tr><td>BCM1013</td><td>FUNDAMENTAL OF DIGITAL MEDIA</td><td>Discipline</td><td>1</td><td>3</td></tr>
+                            <!-- Sem 2 -->
+                            <tr><td>ULE1322</td><td>ENGLISH FOR ACADEMIC COMMUNICATION</td><td>University</td><td>2</td><td>2</td></tr>
+                            <tr><td>ULB1320</td><td>BAHASA MELAYU DAN MASYARAKAT</td><td>University</td><td>2</td><td>0</td></tr>
+                            <tr><td>BUM1233</td><td>DISCRETE MATHEMATICS & APPLICATION</td><td>Math</td><td>2</td><td>3</td></tr>
+                            <tr><td>BCS2163</td><td>OBJECT ORIENTED DESIGN & IMPLEMENTATION</td><td>Core</td><td>2</td><td>3</td></tr>
+                            <tr><td>BCS1043</td><td>SOFTWARE ENGINEERING</td><td>Core</td><td>2</td><td>3</td></tr>
+                            <tr><td>BCN1083</td><td>DATA COMMUNICATION & NETWORKING</td><td>Core</td><td>2</td><td>3</td></tr>
+                            <tr><td>BCM2133</td><td>COMPUTER GRAPHICS</td><td>Discipline</td><td>2</td><td>3</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="total-credits">Total Year 1 Credits: 35 Credit Hours (Sem 1: 18 - Sem 2: 17)</div>
+                </div>
+            </div>
+            
+            <div class="connector"></div>
+            
+            <!-- Decision Point -->
+            <div class="node decision">
+                End of Year 1: Choose Your Pathway
+            </div>
+            
+            <div class="connector"></div>
+            
+            <!-- Splitting Line -->
+            <div class="horizontal-line">
+                <div class="drop-line"></div>
+                <div class="drop-line"></div>
+            </div>
+
+            <!-- Branches -->
+            <div class="branches">
+                
+                <!-- Normal Path -->
+                <div class="branch normal-path">
+                    <div class="branch-title">Standard Path (4 Years)</div>
+                    
+                    <!-- Year 2 Normal -->
+                    <div class="node normal">
+                        <div class="node-title">Year 2</div>
+                        <div class="node-desc">Standard Bachelor Curriculum</div>
+                        <button class="toggle-btn" onclick="toggleCourses(this)">▼ View Required Courses</button>
+                        
+                        <div class="course-panel">
+                            <table class="course-table">
+                                <thead>
+                                    <tr>
+                                        <th>Code</th>
+                                        <th>Course Name</th>
+                                        <th>Type</th>
+                                        <th>Sem</th>
+                                        <th>Cr</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>UHC1122</td><td>ASPIRASI NEGARA BANGSA</td><td>University</td><td>1</td><td>2</td></tr>
+                                    <tr><td>ULE2332</td><td>ENGLISH FOR TECHNICAL COMMUNICATION</td><td>University</td><td>1</td><td>2</td></tr>
+                                    <tr><td>UL*1312</td><td>KURSUS BAHASA ASING</td><td>University</td><td>1</td><td>2</td></tr>
+                                    <tr><td>BCI1153</td><td>DATABASE SYSTEMS</td><td>Core</td><td>1</td><td>3</td></tr>
+                                    <tr><td>BCI2033</td><td>DATA STRUCTURE & ALGORITHMS</td><td>Core</td><td>1</td><td>3</td></tr>
+                                    <tr><td>BCM2113</td><td>3D MODELLING</td><td>Discipline</td><td>1</td><td>3</td></tr>
+                                    <tr><td>BC****3</td><td>ELECTIVE FACULTY 1</td><td>Elective</td><td>1</td><td>3</td></tr>
+                                    <tr><td>UHC1312</td><td>ADAB INSANI</td><td>University</td><td>2</td><td>2</td></tr>
+                                    <tr><td>BUM2413</td><td>APPLIED STATISTICS</td><td>Math</td><td>2</td><td>3</td></tr>
+                                    <tr><td>BCP2173</td><td>HUMAN COMPUTER INTERACTION</td><td>Core</td><td>2</td><td>3</td></tr>
+                                    <tr><td>BCN2173</td><td>OPERATING SYSTEMS</td><td>Core</td><td>2</td><td>3</td></tr>
+                                    <tr><td>BCM2123</td><td>3D DIGITAL ANIMATION</td><td>Discipline</td><td>2</td><td>3</td></tr>
+                                    <tr><td>BCM3313</td><td>DATA ANALYTICS & VISUALIZATION</td><td>Discipline</td><td>2</td><td>3</td></tr>
+                                </tbody>
+                            </table>
+                            <div class="total-credits">Total Year 2 Credits: 35 Credit Hours (Sem 1: 18 - Sem 2: 17)</div>
+                        </div>
+                    </div>
+                    <div class="connector"></div>
+                    
+                    <!-- Year 3 Normal -->
+                    <div class="node normal">
+                        <div class="node-title">Year 3</div>
+                        <div class="node-desc">Standard Bachelor Curriculum</div>
+                        <button class="toggle-btn" onclick="toggleCourses(this)">▼ View Required Courses</button>
+                        
+                        <div class="course-panel">
+                            <table class="course-table">
+                                <thead>
+                                    <tr>
+                                        <th>Code</th>
+                                        <th>Course Name</th>
+                                        <th>Type</th>
+                                        <th>Sem</th>
+                                        <th>Cr</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>UGE2002</td><td>TECHNOPRENEURSHIP</td><td>University</td><td>1</td><td>2</td></tr>
+                                    <tr><td>BCI3302</td><td>PROJECT MANAGEMENT & PROFESSIONAL PRACTICE</td><td>Core</td><td>1</td><td>2</td></tr>
+                                    <tr><td>BCI3363</td><td>MOBILE APPLICATION DEVELOPMENT</td><td>Core</td><td>1</td><td>3</td></tr>
+                                    <tr><td>BCS2323</td><td>ARTIFICIAL INTELLIGENCE</td><td>Core</td><td>1</td><td>3</td></tr>
+                                    <tr><td>BCM3273</td><td>MULTIMEDIA DATA PROCESSING</td><td>Discipline</td><td>1</td><td>3</td></tr>
+                                    <tr><td>BCM3283</td><td>FUNDAMENTAL OF GAME DEVELOPMENT</td><td>Discipline</td><td>1</td><td>3</td></tr>
+                                    <tr><td>ULE2342</td><td>ENGLISH FOR PROFESSIONAL COMMUNICATION</td><td>University</td><td>2</td><td>2</td></tr>
+                                    <tr><td>BCI2323</td><td>WEB DEVELOPMENT</td><td>Core</td><td>2</td><td>3</td></tr>
+                                    <tr><td>BCI2353</td><td>ALGORITHM & COMPLEXITY</td><td>Core</td><td>2</td><td>3</td></tr>
+                                    <tr><td>BCM3013</td><td>VIRTUAL REALITY</td><td>Discipline</td><td>2</td><td>3</td></ tr>
+                                    <tr><td>BCM3293</td><td>GAME PROGRAMMING AND DEVELOPMENT</td><td>Discipline</td><td>2</td><td>3</td></tr>
+                                    <tr><td>BCC3013</td><td>UNDERGRADUATE PROJECT I</td><td>Core</td><td>2</td><td>3</td></tr>
+                                </tbody>
+                            </table>
+                            <div class="total-credits">Total Year 3 Credits: 33 Credit Hours (Sem 1: 16 - Sem 2: 17)</div>
+                        </div>
+                    </div>
+                    <div class="connector"></div>
+                    
+                    <!-- Year 4 Normal -->
+                    <div class="node normal">
+                        <div class="node-title">Year 4</div>
+                        <div class="node-desc">Final Year Project & Internship</div>
+                        <button class="toggle-btn" onclick="toggleCourses(this)">▼ View Required Courses</button>
+                        
+                        <div class="course-panel">
+                            <table class="course-table">
+                                <thead>
+                                    <tr>
+                                        <th>Code</th>
+                                        <th>Course Name</th>
+                                        <th>Type</th>
+                                        <th>Sem</th>
+                                        <th>Cr</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>BCY1023</td><td>INFORMATION SECURITY</td><td>Core</td><td>1</td><td>3</td></tr>
+                                    <tr><td>BC****3</td><td>ELECTIVE FACULTY 2</td><td>Elective</td><td>1</td><td>3</td></tr>
+                                    <tr><td>KES4**3</td><td>CROSS-DISCIPLINE ELECTIVE COURSE</td><td>Elective</td><td>1</td><td>3</td></tr>
+                                    <tr><td>BCC3044</td><td>UNDERGRADUATE PROJECT II</td><td>Core</td><td>1</td><td>4</td></tr>
+                                    <tr><td>BCC4110</td><td>INDUSTRIAL TRAINING</td><td>Core</td><td>2</td><td>10</td></tr>
+                                </tbody>
+                            </table>
+                            <div class="total-credits">Total Year 4 Credits: 23 Credit Hours (Sem 1: 13 - Sem 2: 10)</div>
+                        </div>
+                    </div>
+                    <div class="connector"></div>
+                    
+                    <div class="node award">
+                        <div class="node-title">🎓 Graduation</div>
+                        <div class="node-desc">Bachelor Degree of Computer Science (Multimedia Software) with Honours<div style="margin-top: 10px;"><strong>BCM, UMPSA</strong></div></div>
+                    </div>
+                </div>
+
+                <!-- 3+2 CQU Path -->
+                <div class="branch cqu-path">
+                    <div class="branch-title">3+2 CQU Master's Path (5 Years)</div>
+                    
+                    <!-- Year 2 CQU Path -->
+                    <div class="node cqu">
+                        <div class="node-title">Year 2</div>
+                        <div class="node-desc">Accelerated Core & Discipline Credits</div>
+                        <button class="toggle-btn" onclick="toggleCourses(this)">▼ View Required Courses</button>
+                        
+                        <div class="course-panel">
+                            <table class="course-table">
+                                <thead>
+                                    <tr>
+                                        <th>Code</th>
+                                        <th>Course Name</th>
+                                        <th>Type</th>
+                                        <th>Sem</th>
+                                        <th>Cr</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>UHC1122</td><td>ASPIRASI NEGARA BANGSA</td><td>University</td><td>1</td><td>2</td></tr>
+                                    <tr><td>ULE2332</td><td>ENGLISH FOR TECHNICAL COMMUNICATION</td><td>University</td><td>1</td><td>2</td></tr>
+                                    <tr><td>UL*1312</td><td>KURSUS BAHASA ASING</td><td>University</td><td>1</td><td>2</td></tr>
+                                    <tr><td>BCI1153</td><td>DATABASE SYSTEMS</td><td>Core</td><td>1</td><td>3</td></tr>
+                                    <tr><td>BCI2033</td><td>DATA STRUCTURE & ALGORITHMS</td><td>Core</td><td>1</td><td>3</td></tr>
+                                    <tr><td>BCM2113</td><td>3D MODELLING</td><td>Discipline</td><td>1</td><td>3</td></tr>
+                                    <tr><td>BCY1023</td><td>INFORMATION SECURITY</td><td>Core</td><td>1</td><td>3</td></tr>
+                                    <tr><td>UHC1312</td><td>ADAB INSANI</td><td>University</td><td>2</td><td>2</td></tr>
+                                    <tr><td>BCI2323</td><td>WEB DEVELOPMENT</td><td>Core</td><td>2</td><td>3</td></tr>
+                                    <tr><td>BCP2173</td><td>HUMAN COMPUTER INTERACTION</td><td>Core</td><td>2</td><td>3</td></tr>
+                                    <tr><td>BCN2173</td><td>OPERATING SYSTEMS</td><td>Core</td><td>2</td><td>3</td></tr>
+                                    <tr><td>BCM2123</td><td>3D DIGITAL ANIMATION</td><td>Discipline</td><td>2</td><td>3</td></tr>
+                                    <tr><td>BCM3313</td><td>DATA ANALYTICS & VISUALIZATION</td><td>Discipline</td><td>2</td><td>3</td></tr>
+                                </tbody>
+                            </table>
+                            <div class="total-credits">Total Year 2 Credits: 35 Credit Hours (Sem 1: 18 - Sem 2: 17)</div>
+                        </div>
+                    </div>
+                    <div class="connector"></div>
+                    
+                    <!-- Year 3 CQU Path -->
+                    <div class="node cqu">
+                        <div class="node-title">Year 3</div>
+                        <div class="node-desc">Balanced Credits & Final Year Project</div>
+                        <button class="toggle-btn" onclick="toggleCourses(this)">▼ View Required Courses</button>
+                        
+                        <div class="course-panel">
+                            <table class="course-table">
+                                <thead>
+                                    <tr>
+                                        <th>Code</th>
+                                        <th>Course Name</th>
+                                        <th>Type</th>
+                                        <th>Sem</th>
+                                        <th>Cr</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>UGE2002</td><td>TECHNOPRENEURSHIP</td><td>University</td><td>1</td><td>2</td></tr>
+                                    <tr><td>BCI3302</td><td>PROJECT MANAGEMENT & PROFESSIONAL PRACTICE</td><td>Core</td><td>1</td><td>2</td></tr>
+                                    <tr><td>BCI3363</td><td>MOBILE APPLICATION DEVELOPMENT</td><td>Core</td><td>1</td><td>3</td></tr>
+                                    <tr><td>BCC3013</td><td>UNDERGRADUATE PROJECT I</td><td>Core</td><td>1</td><td>3</td></tr>
+                                    <tr><td>BCM3273</td><td>MULTIMEDIA DATA PROCESSING</td><td>Discipline</td><td>1</td><td>3</td></tr>
+                                    <tr><td>BCM3283</td><td>FUNDAMENTAL OF GAME DEVELOPMENT</td><td>Discipline</td><td>1</td><td>3</td></tr>
+                                    <tr><td>ULE2342</td><td>ENGLISH FOR PROFESSIONAL COMMUNICATION</td><td>University</td><td>2</td><td>2</td></tr>
+                                    <tr><td>BUM2413</td><td>APPLIED STATISTICS</td><td>Math</td><td>2</td><td>3</td></tr>
+                                    <tr><td>BCI2353</td><td>ALGORITHM & COMPLEXITY</td><td>Core</td><td>2</td><td>3</td></tr>
+                                    <tr><td>BCM3013</td><td>VIRTUAL REALITY</td><td>Discipline</td><td>2</td><td>3</td></tr>
+                                    <tr><td>BCM3293</td><td>GAME PROGRAMMING AND DEVELOPMENT</td><td>Discipline</td><td>2</td><td>3</td></tr>
+                                    <tr><td>BCC3044</td><td>UNDERGRADUATE PROJECT II</td><td>Core</td><td>2</td><td>4</td></tr>
+                                </tbody>
+                            </table>
+                            <div class="total-credits">Total Year 3 Credits: 34 Credit Hours (Sem 1: 16 - Sem 2: 18)</div>
+                        </div>
+                    </div>
+                    <div class="connector"></div>
+                    
+                    <!-- Year 1, 2 and 3 Completion Milestone -->
+                    <div class="node decision">
+                        Completed ALL: Year 1, 2 and 3 Courses
+                    </div>
+
+                    <!-- CQU Enrollment Timing Info Box (Highlighted) -->
+                    <div class="node timing-highlight" style="font-size: 0.9em; text-align: left; padding: 14px 18px; margin-top: 20px;">
+                        <div class="node-title" style="font-size: 1.3em; text-align: center; margin-bottom: 13px;">CQU Enrollment Timing</div>
+                        <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 10px;">
+                            <li>If completed all courses <strong>after Sem 2</strong>, enroll to CQU approx. on term 3 (<strong>November</strong>).</li>
+                            <li>If completed all courses <strong>after Sem 1</strong>, enroll to CQU approx. on term 2 (<strong>July</strong>).</li>
+                        </ul>
+                    </div>
+                    <div class="connector"></div>
+                    
+                    <!-- CQU Specialisation Selector -->
+                    <div class="spec-selector-container">
+                        <div class="spec-label">Select CQU Master's Track</div>
+                        <div class="spec-buttons">
+                            <button class="spec-btn active" onclick="selectTrack('sd')">MIT (SD)</button>
+                            <button class="spec-btn" onclick="selectTrack('ai')">MIT (AI)</button>
+                            <button class="spec-btn" onclick="selectTrack('mad')">MAD</button>
+                        </div>
+                    </div>
+                    
+                    <div class="connector"></div>
+
+                    <!-- Year 4 CQU Master's Yr 1 -->
+                    <div class="node cqu-highlight" id="cqu-yr4-node">
+                        <div class="node-title" id="yr4-title">Year 4</div>
+                        <div class="node-desc" id="yr4-desc">CQU Australia - MIT (Software Development) Yr 1</div>
+                        <button class="toggle-btn" onclick="toggleCourses(this)">▼ View Required Courses</button>
+                        
+                        <div class="course-panel">
+                            <table class="course-table" id="yr4-table">
+                                <thead>
+                                    <tr>
+                                        <th>Code</th>
+                                        <th>Course Name</th>
+                                        <th>Type</th>
+                                        <th>Term</th>
+                                        <th>Cr</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="yr4-tbody">
+                                    <!-- Dynamic Content -->
+                                </tbody>
+                            </table>
+                            <div class="total-credits" id="yr4-total">Total Year 4 Credits: 48 CQU Units</div>
+                        </div>
+                    </div>
+                    <div class="connector"></div>
+                    
+                    <!-- Year 5 CQU Master's Yr 2 -->
+                    <div class="node cqu-highlight" id="cqu-yr5-node">
+                        <div class="node-title" id="yr5-title">Year 5</div>
+                        <div class="node-desc" id="yr5-desc">CQU Australia - MIT (Software Development) Yr 2</div>
+                        <button class="toggle-btn" onclick="toggleCourses(this)">▼ View Required Courses</button>
+                        
+                        <div class="course-panel">
+                            <table class="course-table" id="yr5-table">
+                                <thead>
+                                    <tr>
+                                        <th>Code</th>
+                                        <th>Course Name</th>
+                                        <th>Type</th>
+                                        <th>Sem</th>
+                                        <th>Cr</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="yr5-tbody">
+                                    <!-- Dynamic Content -->
+                                </tbody>
+                            </table>
+                            <div class="total-credits" id="yr5-total">Total Year 5 Credits: 48 CQU Units</div>
+                        </div>
+                    </div>
+                    <div class="connector"></div>
+                    
+                    <div class="node award-cqu" id="award-node">
+                        <div class="node-title">🎓 Graduation</div>
+                        <div class="node-desc" id="award-desc"></div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cquTrackData = {
+            sd: {
+                name: "MIT (Software Development)",
+                award: "Bachelor Degree of Computer Science (Multimedia Software) with Honours<div style='margin-top: 10px;'><strong>BCM, UMPSA</strong></div><div style='padding-bottom: 5px; font-size: 3em;'><strong>+</strong></div>Master of Information Technology (Software Development)<div style='margin-top: 10px;'><strong>MIT (SD), CQU</strong></div>",
+                yr4_desc: "MIT (Software Development) - Year 1",
+                yr5_desc: "MIT (Software Development) - Year 2",
+                yr4_courses: [
+                    { code: "COIT20245", name: "INTRODUCTION TO PROGRAMMING", type: "Core", sem: "1", cr: "6" },
+                    { code: "COIT20246", name: "CYBER SECURITY AND NETWORKING", type: "Core", sem: "1", cr: "6" },
+                    { code: "COIT20248", name: "INFORMATION SYSTEMS ANALYSIS AND DESIGN", type: "Core", sem: "1", cr: "6" },
+                    { code: "COIT20249", name: "PROFESSIONAL SKILLS AND ETHICS IN ICT", type: "Core", sem: "1", cr: "6" },
+                    { code: "COIT20247", name: "DATABASE DESIGN AND DEVELOPMENT", type: "Core", sem: "2", cr: "6" },
+                    { code: "PPMP20007", name: "PROJECT MANAGEMENT CONCEPTS", type: "Core", sem: "2", cr: "6" },
+                    { code: "COIT20260", name: "CLOUD AUTOMATION FOR SMARTER APPLICATIONS", type: "Core", sem: "2", cr: "6" },
+                    { code: "COIT20256", name: "OBJECT ORIENTED DEVELOPMENT", type: "Discipline", sem: "2", cr: "6" }
+                ],
+                yr5_courses: [
+                    { code: "COIT20258", name: "SOFTWARE ENGINEERING", type: "Discipline", sem: "1", cr: "6" },
+                    { code: "COIT20268", name: "AI-ASSISTED SOFTWARE DEVELOPMENT AND WEB DESIGN", type: "Discipline", sem: "1", cr: "6" },
+                    { code: "COIT20257", name: "DISTRIBUTED SYSTEMS: PRINCIPLES AND DEVELOPMENT", type: "Discipline", sem: "1", cr: "6" },
+                    { code: "COIT29227", name: "ICT PROJECT PREPARATION AND INDUSTRY ENGAGEMENT", type: "Discipline", sem: "1", cr: "6" },
+                    { code: "COIT20269", name: "FULL STACK WEB DEVELOPMENT", type: "Discipline", sem: "2", cr: "6" },
+                    { code: "COIT20276", name: "INTERNSHIP", type: "Discipline", sem: "2", cr: "12" },
+                    { code: "COIT20277", name: "INTRODUCTION TO ARTIFICIAL INTELLIGENCE", type: "Elective", sem: "2", cr: "6" }
+                ],
+                yr4_total: "Total Year 4 Credits: 48 CQU Units",
+                yr5_total: "Total Year 5 Credits: 48 CQU Units"
+            },
+            ai: {
+                name: "MIT (Artificial Intelligence)",
+                award: "Bachelor Degree of Computer Science (Multimedia Software) with Honours<div style='margin-top: 10px;'><strong>BCM, UMPSA</strong></div><div style='padding-bottom: 5px; font-size: 3em;'><strong>+</strong></div>Master of Information Technology (Artificial Intelligence)<div style='margin-top: 10px;'><strong>MIT (AI), CQU</strong></div>",
+                yr4_desc: "MIT (Artificial Intelligence) - Year 1",
+                yr5_desc: "MIT (Artificial Intelligence) - Year 2",
+                yr4_courses: [
+                    { code: "COIT20245", name: "INTRODUCTION TO PROGRAMMING", type: "Core", sem: "1", cr: "6" },
+                    { code: "COIT20246", name: "CYBER SECURITY AND NETWORKING", type: "Core", sem: "1", cr: "6" },
+                    { code: "COIT20248", name: "INFORMATION SYSTEMS ANALYSIS AND DESIGN", type: "Core", sem: "1", cr: "6" },
+                    { code: "COIT20249", name: "PROFESSIONAL SKILLS AND ETHICS IN ICT", type: "Core", sem: "1", cr: "6" },
+                    { code: "COIT20247", name: "DATABASE DESIGN AND DEVELOPMENT", type: "Core", sem: "2", cr: "6" },
+                    { code: "PPMP20007", name: "PROJECT MANAGEMENT CONCEPTS", type: "Core", sem: "2", cr: "6" },
+                    { code: "COIT20260", name: "CLOUD AUTOMATION FOR SMARTER APPLICATIONS", type: "Core", sem: "2", cr: "6" },
+                    { code: "COIT20277", name: "INTRODUCTION TO ARTIFICIAL INTELLIGENCE", type: "Discipline", sem: "2", cr: "6" }
+                ],
+                yr5_courses: [
+                    { code: "STAT20029", name: "APPLIED STATISTICS FOR ARTIFICIAL INTELLIGENCE", type: "Discipline", sem: "1", cr: "6" },
+                    { code: "COIT29225", name: "ADVANCED ARTIFICIAL INTELLIGENCE", type: "Discipline", sem: "1", cr: "6" },
+                    { code: "COIT29224", name: "DEEP LEARNING FOR APPLIED COMPUTER VISION", type: "Discipline", sem: "1", cr: "6" },
+                    { code: "COIT29226", name: "ARTIFICIAL INTELLIGENCE INTEGRATED INTERNET OF THING", type: "Discipline", sem: "1", cr: "6" },
+                    { code: "COIT29227", name: "ICT PROJECT PREPARATION AND INDUSTRY ENGAGEMENT", type: "Discipline", sem: "2", cr: "6" },
+                    { code: "COIT20276", name: "INTERNSHIP", type: "Discipline", sem: "2", cr: "12" },
+                    { code: "<strong>Choose ONLY 1</strong>", name: "COIT29226 INTRODUCTION TO THE INTERNET OF THINGS<br><strong>OR</strong><br>COIT29223 BLOCKCHAIN TECHNOLOGIES FOR SUSTAINABLE BUSINESS APPLICATIONS<br><strong>OR</strong><br>COIT20268 RESPONSIVE WEB DESIGN", type: "Elective", sem: "2", cr: "6" }
+                ],
+                yr4_total: "Total Year 4 Credits: 48 CQU Units",
+                yr5_total: "Total Year 5 Credits: 48 CQU Units"
+            },
+            mad: {
+                name: "MAD (Mobile Application Development)",
+                award: "Bachelor Degree of Computer Science (Multimedia Software) with Honours<div style='margin-top: 10px;'><strong>BCM, UMPSA</strong></div><div style='padding-bottom: 5px; font-size: 3em;'><strong>+</strong></div>Master of Data Analytics<div style='margin-top: 10px;'><strong>MAD, CQU</strong></div>",
+                yr4_desc: "Master of Data Analytics - Year 1",
+                yr5_desc: "Master of Data Analytics - Year 2",
+                yr4_courses: [
+                    { code: "COIT20245", name: "INTRODUCTION TO PROGRAMMING", type: "Core", sem: "1", cr: "6" },
+                    { code: "COIT20246", name: "CYBER SECURITY AND NETWORKING", type: "Core", sem: "1", cr: "6" },
+                    { code: "COIT20248", name: "INFORMATION SYSTEMS ANALYSIS AND DESIGN", type: "Core", sem: "1", cr: "6" },
+                    { code: "COIT20249", name: "PROFESSIONAL SKILLS AND ETHICS IN ICT", type: "Core", sem: "1", cr: "6" },
+                    { code: "COIT20247", name: "DATABASE DESIGN AND DEVELOPMENT", type: "Core", sem: "2", cr: "6" },
+                    { code: "PPMP20007", name: "PROJECT MANAGEMENT CONCEPTS", type: "Core", sem: "2", cr: "6" },
+                    { code: "COIT20260", name: "CLOUD AUTOMATION FOR SMARTER APPLICATIONS", type: "Core", sem: "2", cr: "6" },
+                    { code: "COIT20250", name: "DATA ANALYTICS AND VISUALISATION", type: "Discipline", sem: "2", cr: "6" }
+                ],
+                yr5_courses: [
+                    { code: "COIT20251", name: "KNOWLEDGE MANAGEMENT IN THE AGE OF AI", type: "Discipline", sem: "1", cr: "6" },
+                    { code: "COIT20252", name: "PROCESS MANAGEMENT AND ANALYTICS", type: "Discipline", sem: "1", cr: "6" },
+                    { code: "COIT29223", name: "BLOCKCHAIN TECHNOLOGIES FOR SUSTAINABLE BUSINESS APPLICATIONS", type: "Discipline", sem: "1", cr: "6" },
+                    { code: "COIT29227", name: "ICT PROJECT PREPARATION AND INDUSTRY ENGAGEMENT", type: "Discipline", sem: "1", cr: "6" },
+                    { code: "COIT20253", name: "BUSINESS INTELLIGENCE USING BIG DATA", type: "Discipline", sem: "2", cr: "6" },
+                    { code: "COIT20276", name: "INTERNSHIP", type: "Discipline", sem: "2", cr: "12" },
+                    { code: "COIT20277", name: "INTRODUCTION TO ARTIFICIAL INTELLIGENCE", type: "Elective", sem: "2", cr: "6" }
+                ],
+                yr4_total: "Total Year 4 Credits: 48 CQU Units",
+                yr5_total: "Total Year 5 Credits: 48 CQU Units"
+            }
+        };
+
+        function renderTrack(trackKey) {
+            const data = cquTrackData[trackKey];
+            
+            // Year 4 updates
+            document.getElementById('yr4-desc').textContent = data.yr4_desc;
+            document.getElementById('yr4-total').textContent = data.yr4_total;
+            const yr4Tbody = document.getElementById('yr4-tbody');
+            yr4Tbody.innerHTML = data.yr4_courses.map(c => 
+                `<tr><td>${c.code}</td><td>${c.name}</td><td>${c.type}</td><td>${c.sem}</td><td>${c.cr}</td></tr>`
+            ).join('');
+
+            // Year 5 updates
+            document.getElementById('yr5-desc').textContent = data.yr5_desc;
+            document.getElementById('yr5-total').textContent = data.yr5_total;
+            const yr5Tbody = document.getElementById('yr5-tbody');
+            yr5Tbody.innerHTML = data.yr5_courses.map(c => 
+                `<tr><td>${c.code}</td><td>${c.name}</td><td>${c.type}</td><td>${c.sem}</td><td>${c.cr}</td></tr>`
+            ).join('');
+
+            // Award description
+            document.getElementById('award-desc').innerHTML = data.award;
+        }
+
+        function selectTrack(trackKey) {
+            // Update active button style
+            document.querySelectorAll('.spec-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Re-render track data
+            renderTrack(trackKey);
+        }
+
+        function toggleCourses(button) {
+            const node = button.closest('.node');
+            const panel = button.nextElementSibling;
+            const isOpen = panel.classList.contains('open');
+            
+            if (isOpen) {
+                panel.classList.remove('open');
+                node.classList.remove('expanded');
+                button.textContent = '▼ View Required Courses';
+            } else {
+                panel.classList.add('open');
+                node.classList.add('expanded');
+                button.textContent = '▲ Hide Required Courses';
+            }
+        }
+
+        // Initial render
+        renderTrack('sd');
+    </script>
+</body>
+</html>
