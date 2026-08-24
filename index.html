@@ -363,6 +363,32 @@
         .node.timing-highlight li:not(:last-child) {
             margin-bottom: 3px;
         }
+
+        /* Styling for grouped primary and additional rows */
+        .course-table tr.grouped-primary td {
+            border-top: 2px solid #e67e22;
+            border-bottom: 1px dashed #f39c12;
+        }
+
+        .course-table tr.grouped-additional {
+            background-color: #fff3e0;
+        }
+
+        .course-table tr.grouped-additional td {
+            color: #d35400;
+            border-bottom: 2px solid #e67e22;
+        }
+
+        /* Increased left and right border thickness to compensate for clipping */
+        .course-table tr.grouped-primary td:first-child,
+        .course-table tr.grouped-additional td:first-child {
+            border-left: 4px solid #e67e22;
+        }
+
+        .course-table tr.grouped-primary td:last-child,
+        .course-table tr.grouped-additional td:last-child {
+            border-right: 4px solid #e67e22;
+        }
     </style>
 </head>
 <body>
@@ -727,17 +753,35 @@
                     { code: "COIT20249", name: "PROFESSIONAL SKILLS AND ETHICS IN ICT", type: "Core", sem: "1", cr: "6" },
                     { code: "COIT20247", name: "DATABASE DESIGN AND DEVELOPMENT", type: "Core", sem: "2", cr: "6" },
                     { code: "PPMP20007", name: "PROJECT MANAGEMENT CONCEPTS", type: "Core", sem: "2", cr: "6" },
-                    { code: "COIT20260", name: "CLOUD AUTOMATION FOR SMARTER APPLICATIONS", type: "Core", sem: "2", cr: "6" },
+                    { 
+                        code: "COIT20260", name: "CLOUD AUTOMATION FOR SMARTER APPLICATIONS", type: "Core (CQU)", sem: "2", cr: "6",
+                        additional: { code: "BC****3", name: "ELECTIVE FACULTY 1", type: "Elective (UMPSA)", sem: "2", cr: "3" }
+                    },
                     { code: "COIT20256", name: "OBJECT ORIENTED DEVELOPMENT", type: "Discipline", sem: "2", cr: "6" }
                 ],
                 yr5_courses: [
                     { code: "COIT20258", name: "SOFTWARE ENGINEERING", type: "Discipline", sem: "1", cr: "6" },
-                    { code: "COIT20268", name: "AI-ASSISTED SOFTWARE DEVELOPMENT AND WEB DESIGN", type: "Discipline", sem: "1", cr: "6" },
+                    { 
+                        code: "COIT20268", name: "AI-ASSISTED SOFTWARE DEVELOPMENT AND WEB DESIGN", type: "Discipline (CQU)", sem: "1", cr: "6",
+                        additional: { code: "BC****3", name: "ELECTIVE FACULTY 2", type: "Elective (UMPSA)", sem: "1", cr: "3" }
+                    },
                     { code: "COIT20257", name: "DISTRIBUTED SYSTEMS: PRINCIPLES AND DEVELOPMENT", type: "Discipline", sem: "1", cr: "6" },
-                    { code: "COIT29227", name: "ICT PROJECT PREPARATION AND INDUSTRY ENGAGEMENT", type: "Discipline", sem: "1", cr: "6" },
-                    { code: "COIT20269", name: "FULL STACK WEB DEVELOPMENT", type: "Discipline", sem: "2", cr: "6" },
-                    { code: "COIT20276", name: "INTERNSHIP", type: "Discipline", sem: "2", cr: "12" },
-                    { code: "COIT20277", name: "INTRODUCTION TO ARTIFICIAL INTELLIGENCE", type: "Elective", sem: "2", cr: "6" }
+                    { 
+                        code: "COIT29227", name: "ICT PROJECT PREPARATION AND INDUSTRY ENGAGEMENT", type: "Discipline (CQU)", sem: "1", cr: "6",
+                        additional: { code: "BCC41**", name: "INDUSTRIAL TRAINING (Part 1)", type: "Core (UMPSA)", sem: "1", cr: "4" }
+                    },
+                    { 
+                        code: "COIT20269", name: "FULL STACK WEB DEVELOPMENT", type: "Discipline (CQU)", sem: "2", cr: "6",
+                        additional: { code: "KES4**3", name: "CROSS-DISCIPLINE ELECTIVE COURSE", type: "Elective (UMPSA)", sem: "2", cr: "3" }
+                    },
+                    { 
+                        code: "COIT20276", name: "INTERNSHIP", type: "Discipline (CQU)", sem: "2", cr: "12",
+                        additional: { code: "BCC41**", name: "INDUSTRIAL TRAINING (Part 2)", type: "Core (UMPSA)", sem: "2", cr: "6" }
+                    },
+                    { 
+                        code: "COIT20277", name: "INTRODUCTION TO ARTIFICIAL INTELLIGENCE", type: "Elective (CQU)", sem: "2", cr: "6",
+                        additional: { code: "BCS2323", name: "ARTIFICIAL INTELLIGENCE", type: "Core (UMPSA)", sem: "2", cr: "3" }
+                    }
                 ],
                 yr4_total: "Total Year 4 Credits: 48 CQU Units",
                 yr5_total: "Total Year 5 Credits: 48 CQU Units"
@@ -754,17 +798,38 @@
                     { code: "COIT20249", name: "PROFESSIONAL SKILLS AND ETHICS IN ICT", type: "Core", sem: "1", cr: "6" },
                     { code: "COIT20247", name: "DATABASE DESIGN AND DEVELOPMENT", type: "Core", sem: "2", cr: "6" },
                     { code: "PPMP20007", name: "PROJECT MANAGEMENT CONCEPTS", type: "Core", sem: "2", cr: "6" },
-                    { code: "COIT20260", name: "CLOUD AUTOMATION FOR SMARTER APPLICATIONS", type: "Core", sem: "2", cr: "6" },
-                    { code: "COIT20277", name: "INTRODUCTION TO ARTIFICIAL INTELLIGENCE", type: "Discipline", sem: "2", cr: "6" }
+                    { 
+                        code: "COIT20260", name: "CLOUD AUTOMATION FOR SMARTER APPLICATIONS", type: "Core (CQU)", sem: "2", cr: "6",
+                        additional: { code: "BC****3", name: "ELECTIVE FACULTY 1 or 2", type: "Elective (UMPSA)", sem: "2", cr: "3" }
+                    },
+                    { 
+                        code: "COIT20277", name: "INTRODUCTION TO ARTIFICIAL INTELLIGENCE", type: "Elective (CQU)", sem: "2", cr: "6",
+                        additional: { code: "BCS2323", name: "ARTIFICIAL INTELLIGENCE", type: "Core (UMPSA)", sem: "2", cr: "3" }
+                    }
                 ],
                 yr5_courses: [
                     { code: "STAT20029", name: "APPLIED STATISTICS FOR ARTIFICIAL INTELLIGENCE", type: "Discipline", sem: "1", cr: "6" },
                     { code: "COIT29225", name: "ADVANCED ARTIFICIAL INTELLIGENCE", type: "Discipline", sem: "1", cr: "6" },
-                    { code: "COIT29224", name: "DEEP LEARNING FOR APPLIED COMPUTER VISION", type: "Discipline", sem: "1", cr: "6" },
-                    { code: "COIT29226", name: "ARTIFICIAL INTELLIGENCE INTEGRATED INTERNET OF THING", type: "Discipline", sem: "1", cr: "6" },
-                    { code: "COIT29227", name: "ICT PROJECT PREPARATION AND INDUSTRY ENGAGEMENT", type: "Discipline", sem: "2", cr: "6" },
-                    { code: "COIT20276", name: "INTERNSHIP", type: "Discipline", sem: "2", cr: "12" },
-                    { code: "<strong>Choose ONLY 1</strong>", name: "COIT29226 INTRODUCTION TO THE INTERNET OF THINGS<br><strong>OR</strong><br>COIT29223 BLOCKCHAIN TECHNOLOGIES FOR SUSTAINABLE BUSINESS APPLICATIONS<br><strong>OR</strong><br>COIT20268 RESPONSIVE WEB DESIGN", type: "Elective", sem: "2", cr: "6" }
+                    { 
+                        code: "COIT29224", name: "DEEP LEARNING FOR APPLIED COMPUTER VISION", type: "Discipline (CQU)", sem: "1", cr: "6",
+                        additional: { code: "BC****3", name: "ELECTIVE FACULTY 1 or 2", type: "Elective (UMPSA)", sem: "1", cr: "3" }
+                    },
+                    { 
+                        code: "COIT29226", name: "ARTIFICIAL INTELLIGENCE INTEGRATED INTERNET OF THING", type: "Discipline (CQU)", sem: "1", cr: "6",
+                        additional: { code: "BC****3", name: "ELECTIVE FACULTY 1 or 2", type: "Elective (UMPSA)", sem: "1", cr: "3" }
+                    },
+                    { 
+                        code: "COIT29227", name: "ICT PROJECT PREPARATION AND INDUSTRY ENGAGEMENT", type: "Discipline (CQU)", sem: "2", cr: "6",
+                        additional: { code: "BCC41**", name: "INDUSTRIAL TRAINING (Part 1)", type: "Core (UMPSA)", sem: "2", cr: "4" }
+                    },
+                    { 
+                        code: "COIT20276", name: "INTERNSHIP", type: "Discipline (CQU)", sem: "2", cr: "12",
+                        additional: { code: "BCC41**", name: "INDUSTRIAL TRAINING (Part 2)", type: "Core (UMPSA)", sem: "2", cr: "6" }
+                    },
+                    { 
+                        code: "<strong>Choose ONLY 1</strong>", name: "COIT29226 INTRODUCTION TO THE INTERNET OF THINGS<br><strong>OR</strong><br>COIT29223 BLOCKCHAIN TECHNOLOGIES FOR SUSTAINABLE BUSINESS APPLICATIONS<br><strong>OR</strong><br>COIT20268 RESPONSIVE WEB DESIGN", type: "Elective", sem: "2", cr: "6",
+                        additional: { code: "KES4**3", name: "CROSS-DISCIPLINE ELECTIVE COURSE", type: "Elective (UMPSA)", sem: "2", cr: "3" }
+                    }
                 ],
                 yr4_total: "Total Year 4 Credits: 48 CQU Units",
                 yr5_total: "Total Year 5 Credits: 48 CQU Units"
@@ -781,17 +846,35 @@
                     { code: "COIT20249", name: "PROFESSIONAL SKILLS AND ETHICS IN ICT", type: "Core", sem: "1", cr: "6" },
                     { code: "COIT20247", name: "DATABASE DESIGN AND DEVELOPMENT", type: "Core", sem: "2", cr: "6" },
                     { code: "PPMP20007", name: "PROJECT MANAGEMENT CONCEPTS", type: "Core", sem: "2", cr: "6" },
-                    { code: "COIT20260", name: "CLOUD AUTOMATION FOR SMARTER APPLICATIONS", type: "Core", sem: "2", cr: "6" },
+                    { 
+                        code: "COIT20260", name: "CLOUD AUTOMATION FOR SMARTER APPLICATIONS", type: "Core (CQU)", sem: "2", cr: "6",
+                        additional: { code: "BC****3", name: "ELECTIVE FACULTY 1", type: "Elective (UMPSA)", sem: "2", cr: "3" }
+                    },
                     { code: "COIT20250", name: "DATA ANALYTICS AND VISUALISATION", type: "Discipline", sem: "2", cr: "6" }
                 ],
                 yr5_courses: [
                     { code: "COIT20251", name: "KNOWLEDGE MANAGEMENT IN THE AGE OF AI", type: "Discipline", sem: "1", cr: "6" },
                     { code: "COIT20252", name: "PROCESS MANAGEMENT AND ANALYTICS", type: "Discipline", sem: "1", cr: "6" },
-                    { code: "COIT29223", name: "BLOCKCHAIN TECHNOLOGIES FOR SUSTAINABLE BUSINESS APPLICATIONS", type: "Discipline", sem: "1", cr: "6" },
-                    { code: "COIT29227", name: "ICT PROJECT PREPARATION AND INDUSTRY ENGAGEMENT", type: "Discipline", sem: "1", cr: "6" },
-                    { code: "COIT20253", name: "BUSINESS INTELLIGENCE USING BIG DATA", type: "Discipline", sem: "2", cr: "6" },
-                    { code: "COIT20276", name: "INTERNSHIP", type: "Discipline", sem: "2", cr: "12" },
-                    { code: "COIT20277", name: "INTRODUCTION TO ARTIFICIAL INTELLIGENCE", type: "Elective", sem: "2", cr: "6" }
+                    { 
+                        code: "COIT29223", name: "BLOCKCHAIN TECHNOLOGIES FOR SUSTAINABLE BUSINESS APPLICATIONS", type: "Discipline (CQU)", sem: "1", cr: "6",
+                        additional: { code: "BC****3", name: "ELECTIVE FACULTY 2", type: "Elective (UMPSA)", sem: "1", cr: "3" }
+                    },
+                    { 
+                        code: "COIT29227", name: "ICT PROJECT PREPARATION AND INDUSTRY ENGAGEMENT", type: "Discipline (CQU)", sem: "1", cr: "6",
+                        additional: { code: "BCC41**", name: "INDUSTRIAL TRAINING (Part 1)", type: "Core (UMPSA)", sem: "2", cr: "4" }
+                    },
+                    { 
+                        code: "COIT20253", name: "BUSINESS INTELLIGENCE USING BIG DATA", type: "Discipline (CQU)", sem: "2", cr: "6",
+                        additional: { code: "KES4**3", name: "CROSS-DISCIPLINE ELECTIVE COURSE", type: "Elective (UMPSA)", sem: "2", cr: "3" }
+                    },
+                    { 
+                        code: "COIT20276", name: "INTERNSHIP", type: "Discipline (CQU)", sem: "2", cr: "12",
+                        additional: { code: "BCC41**", name: "INDUSTRIAL TRAINING (Part 2)", type: "Core (UMPSA)", sem: "2", cr: "6" }
+                    },
+                    { 
+                        code: "COIT20277", name: "INTRODUCTION TO ARTIFICIAL INTELLIGENCE", type: "Elective (CQU)", sem: "2", cr: "6",
+                        additional: { code: "BCS2323", name: "ARTIFICIAL INTELLIGENCE", type: "Core (UMPSA)", sem: "2", cr: "3" }
+                    }
                 ],
                 yr4_total: "Total Year 4 Credits: 48 CQU Units",
                 yr5_total: "Total Year 5 Credits: 48 CQU Units"
@@ -801,21 +884,37 @@
         function renderTrack(trackKey) {
             const data = cquTrackData[trackKey];
             
+            // Renders standard single rows or grouped 2-row course pairs
+            const renderRow = (c) => {
+                if (c.additional) {
+                    return `
+                        <tr class="grouped-primary">
+                            <td>${c.code}</td>
+                            <td>${c.name}</td>
+                            <td>${c.type}</td>
+                            <td>${c.sem}</td>
+                            <td>${c.cr}</td>
+                        </tr>
+                        <tr class="grouped-additional">
+                            <td>${c.additional.code}</td>
+                            <td>${c.additional.name}</td>
+                            <td>${c.additional.type}</td>
+                            <td>${c.additional.sem}</td>
+                            <td>${c.additional.cr}</td>
+                        </tr>`;
+                }
+                return `<tr><td>${c.code}</td><td>${c.name}</td><td>${c.type}</td><td>${c.sem}</td><td>${c.cr}</td></tr>`;
+            };
+
             // Year 4 updates
             document.getElementById('yr4-desc').textContent = data.yr4_desc;
             document.getElementById('yr4-total').textContent = data.yr4_total;
-            const yr4Tbody = document.getElementById('yr4-tbody');
-            yr4Tbody.innerHTML = data.yr4_courses.map(c => 
-                `<tr><td>${c.code}</td><td>${c.name}</td><td>${c.type}</td><td>${c.sem}</td><td>${c.cr}</td></tr>`
-            ).join('');
+            document.getElementById('yr4-tbody').innerHTML = data.yr4_courses.map(renderRow).join('');
 
             // Year 5 updates
             document.getElementById('yr5-desc').textContent = data.yr5_desc;
             document.getElementById('yr5-total').textContent = data.yr5_total;
-            const yr5Tbody = document.getElementById('yr5-tbody');
-            yr5Tbody.innerHTML = data.yr5_courses.map(c => 
-                `<tr><td>${c.code}</td><td>${c.name}</td><td>${c.type}</td><td>${c.sem}</td><td>${c.cr}</td></tr>`
-            ).join('');
+            document.getElementById('yr5-tbody').innerHTML = data.yr5_courses.map(renderRow).join('');
 
             // Award description
             document.getElementById('award-desc').innerHTML = data.award;
